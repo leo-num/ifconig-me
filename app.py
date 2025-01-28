@@ -1,9 +1,9 @@
-from flask import Flask, jsonify
+from flask import Flask, make_response
+import json
 import sqlite3
 
 app = Flask(__name__)
 
-# Initialize database
 DATABASE = "counter.db"
 
 def init_db():
@@ -14,7 +14,6 @@ def init_db():
     conn.commit()
     conn.close()
 
-# Increment counter and fetch the current count
 def increment_and_get_hits():
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
@@ -25,7 +24,6 @@ def increment_and_get_hits():
     conn.close()
     return count
 
-# Routes
 @app.route("/")
 def home():
     hits = increment_and_get_hits()
@@ -34,7 +32,9 @@ def home():
         "hits": hits,
         "note": "Take care!"
     }
-    return jsonify(message)
+    response = make_response(json.dumps(message, ensure_ascii=False))
+    response.headers['Content-Type'] = 'application/json'
+    return response
 
 if __name__ == "__main__":
     init_db()
