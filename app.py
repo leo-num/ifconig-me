@@ -27,14 +27,8 @@ def increment_and_get_hits():
 @app.route("/")
 def home():
     hits = increment_and_get_hits()
-    message = {
-        "message": "You spelled it wrong ☺️.",
-        "hits": hits,
-        "note": "Take care!"
-    }
-    response = make_response(json.dumps(message, ensure_ascii=False))
-    response.headers['Content-Type'] = 'application/json'
-    return response
+    message = f"You spelled it wrong ☺️. This has happened {hits} times this year. Take care!"
+    return message, 200, {"Content-Type": "text/plain"}
 
 if __name__ == "__main__":
     init_db()
